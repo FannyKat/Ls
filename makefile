@@ -1,26 +1,26 @@
 NAME	=	ft_ls
 
-SRC		=	init.c\
+SRC	=	init.c display.c check_dir.c\
 
 OBJ 	=	$(SRC:.c=.o)
 
-CC		=	clang
+CC	=	 gcc
 
 CFLAGS	=	-Wall -Wextra -I .
 
 all:		$(NAME)
 
 $(NAME):	$(OBJ)
-			@make -C libft
-			@$(CC) $(CFLAGS) libft/libft.a $(SRC) -o $(NAME)
+		@make -C libft
+		@$(CC) $(CFLAGS) ${SRC} libft/libft.a -o $(NAME)
 clean:
-			@/bin/rm -rf $(OBJ)
-			@make -C libft/ clean
+		@/bin/rm -rf $(OBJ)
+		@make -C libft/ clean
 
-fclean:		clean
-			@/bin/rm -rf $(NAME)
-			@make -C libft/ fclean
+fclean:	clean
+		@/bin/rm -rf $(NAME)
+		@make -C libft/ fclean
 
-re:			fclean all
+re:		fclean all
 
 .PHONY:		all clean fclean re
