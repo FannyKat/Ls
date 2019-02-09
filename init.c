@@ -1,40 +1,23 @@
 #include "my_ls.h"
 
-void				*error(char *str)
+void					*error(char *str)
 {
 	ft_putstr(str);
 	exit(EXIT_FAILURE);
 }	
 
-void				stock_file(char *path, DIR *dir, t_list *file)
-{
-	struct dirent		*current;
-	t_list			*begin;
-
-	begin = file;
-	while ((current = readdir(dir)) != NULL)
-	{
-		file->content = ft_strdup(path);
-		file->data = ft_strdup(current->d_name);
-	printf("%s\n", file->data);
-		file->next = ft_xlstadd(NULL);
-		file = file->next;
-	}
-	file = begin;
-}
-
-int 				isdir(char *name)
+int 					isdir(char *path)
 {
 	struct stat 		buf;
 
-	lstat(name, &buf);
+	lstat(path, &buf);
 	return ((buf.st_mode & S_IFMT) == S_IFDIR);
 }
 
-int					is_notdot(t_list *file)
+int						is_notdot(t_list *file)
 {
 	char				*tmp;
-	int				size;
+	int					size;
 	struct stat			fd;
 
 	stat(file->content, &fd);
@@ -46,28 +29,61 @@ int					is_notdot(t_list *file)
 	return (0);
 }
 
-int					main(int ac, char **av)
+int						isdot(char *dot)
 {
-	struct stat			fd;
-	DIR*				dir;
-	t_list				*file;
-	int				i = 1;
-	int				j;
+	int					cpt;
 
-	stat(av[i], &fd);
-	file = ft_xlstadd(NULL);
-	j = ac;
-	while (j-- > 1)
-	{
-		if (isdir(av[i]))
+	cpt = 0;
+	(*dot++ == '.') ? cpt++ : 0;
+	(*dot == '.') ? cpt++ : 0;
+	return ((cpt == 1 || cpt == 2 ) ? 1 : 0);
+}
+
+void					print_list(t_list *files)
+{
+		t_list			*begin;
+
+		begin = files;
+		while (files->next)
 		{
-			dir = opendir(av[i]);
-			check_dir(file, av[i], ac, dir);
-			i++;
-			continue ;
+			if (isdot(files->data)) //!flags -a
+					files = files->next;
+			else
+			{	
+				printf("%s\n", get_name(files->data));
+				files = files->next;
+			}
 		}
-		inspect_file(av[i], ac);
+		files = begin;
+}
+
+int						main(int ac, char **av)
+{
+	t_list				*files;
+	t_list				*dir;
+	int					j;
+	int					i;
+	int					flags;
+
+	i = 1;
+	j = ac;
+	files = ft_xlstadd(NULL);
+	dir = ft_xlstadd(NULL);
+	flags = check_dash(&i, av);
+	while (i < j)
+	{
+		if (!isdir(av[i]))
+		{
+			stock_data(av[i], files);
+			printf("%s\n", get_name(files->content));
+		}
 		i++;
 	}
+	//print_list(files);
+	stock_params(j, av, files, dir);
+/*	LFLAGS 
+	inspect_file(av[i], ac);
+	stock and print tlist files
+								*/
 	return (0);
 }

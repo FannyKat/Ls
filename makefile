@@ -1,26 +1,26 @@
 NAME	=	ft_ls
 
-SRC	=	init.c display.c check_dir.c\
+SRC		=	init.c display.c check_dir.c stock.c flags.c\
 
 OBJ 	=	$(SRC:.c=.o)
 
-CC	=	 gcc
+CC		=	 gcc
 
-CFLAGS	=	-Wall -Wextra -I .
+CFLAGS	+=	-Wall -Wextra -I .
 
 all:		$(NAME)
 
 $(NAME):	$(OBJ)
-		@make -C libft
-		@$(CC) $(CFLAGS) ${SRC} libft/libft.a -o $(NAME)
+			@make -C ../libft
+			@$(CC) $(CFLAGS) ${SRC} ../libft/libft.a -o $(NAME)
 clean:
-		@/bin/rm -rf $(OBJ)
-		@make -C libft/ clean
+			@/bin/rm -rf $(OBJ)
+			@make -C ../libft/ clean
 
-fclean:	clean
-		@/bin/rm -rf $(NAME)
-		@make -C libft/ fclean
+fclean:		clean
+			@/bin/rm -rf $(NAME)
+			@make -C ../libft/ fclean
 
-re:		fclean all
+re:			fclean all
 
 .PHONY:		all clean fclean re

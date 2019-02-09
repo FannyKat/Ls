@@ -20,7 +20,7 @@ void				block_bytes(t_list *file, t_list *begin)
 char				*get_name(char *av)
 {
 	char			*str;
-	int			i;
+	int				i;
 
 	i = ft_strlen(av);
 	while (i > 0 && av[i] != '/')
@@ -36,7 +36,7 @@ char				*get_time(char *av)
 	return (av);
 }
 
-void 				*get_mode(mode_t fd)
+void 				get_mode(mode_t fd)
 { 
 	printf("%s", S_IRUSR & (fd) ? "r" : "-");
 	printf("%s", S_IWUSR & (fd) ? "w" : "-");
@@ -47,7 +47,6 @@ void 				*get_mode(mode_t fd)
 	printf("%s", S_IROTH & (fd) ? "r" : "-");
 	printf("%s", S_IWOTH & (fd) ? "w" : "-");
 	printf("%s ", S_IXOTH & (fd) ? "x " : "- ");
-	return (0);
 }
 
 void 				inspect_file(char *path, int size)
@@ -63,10 +62,10 @@ void 				inspect_file(char *path, int size)
 	{
 		printf("%s", S_ISDIR (fd.st_mode) ? "d" : "-");
 		get_mode(fd.st_mode);
-		printf("%lu ", fd.st_nlink);
+		printf("%hu ", fd.st_nlink);
 		printf("%s ", getuid->pw_name);
 		printf("%s ", getgid->gr_name);
-		printf("%lu ", fd.st_size);
+		printf("%lld ", fd.st_size);
 		printf("%s ", get_time(ctime(&fd.st_mtime)));
 		S_ISDIR (fd.st_mode) ? printf("\033[1;34m") : 0;
 		printf("%s\n", get_name(path));

@@ -1,33 +1,34 @@
 #include "my_ls.h"
 
-void				display(t_list *file, t_list *begin, int size)
+void				display(t_list *file, t_list *begin)
 {
 	begin = file;
 	while (file->next)
 	{
 		file->content = ft_strjoin(file->content, "/");
 		file->content = ft_strjoin(file->content, file->data);
-		inspect_file(file->content, size);
+	//	inspect_file(file->content, size);
 		file = file->next;
 	}
 	file = begin;
 }
 
-t_list				*check_subdir(t_list *file, DIR *dir, int ac)
+t_list				*check_subdir(t_list *file)
 {
 	t_list			*begin;	
+	DIR				*dir;
 
 	begin = file;
 	while (file->next)
 	{
 		if (is_notdot(file))
 		{
+			//stock_files(file->content, file);
 			printf("\n");
 			printf("%s:\n", file->content);
 			dir = opendir(file->content);
-			stock_file(file->content, dir, file);
-			block_bytes(file, begin);
-			display(file, begin, ac);
+	//		block_bytes(file, begin);
+			display(file, begin);
 		}
 		file = file->next;
 	}
@@ -35,7 +36,7 @@ t_list				*check_subdir(t_list *file, DIR *dir, int ac)
 	return (0);
 }
 
-void					recursive(t_list *file, DIR* dir, int size)
+void					recursive(t_list *file, int size)
 {
 	t_list				*current;
 
@@ -43,21 +44,22 @@ void					recursive(t_list *file, DIR* dir, int size)
 	{
 		current = file;
 		file = file->next;
-		check_subdir(current, dir, size);
-		recursive(file, dir,  size);
+		if (is_notdot(current))
+			check_subdir(current);
+		printf("%s \n", file->content);
+		recursive(file,  size);
 	}
 }
 
 
-void					check_dir(t_list *file, char *path, int size, DIR* dir)
+void					check_dir(t_list *file, char *path, int size)
 {
 	t_list				*begin;
 
 	begin = file;
 	printf("%s:\n", path);
-	stock_file(path, dir, file);
+//	stock_files(path, file);
 	block_bytes(file, begin);
-	display(file, begin, size);
-	closedir(dir);
-	recursive(file, dir, size);
+	display(file, begin);
+	recursive(file, size);
 }
