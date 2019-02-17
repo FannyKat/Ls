@@ -36,10 +36,15 @@ int				check_dash(int *i, char **av)
 				return (0);
 			}
 			flags += check_flags(flags, av[*i]);
-			(*i)++;
+			av[*i]++;
 		}
 		else
-			return (0);
+		{
+			(*i)++;
+			if (flags == 0 && av[1][0] == '-')
+				error("ls: illegal option -- \nusage: ls [-ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1] [file ...]\n");
+			return (flags);
+		}
 	}
 	return (flags);
 }

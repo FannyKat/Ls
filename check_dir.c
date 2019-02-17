@@ -1,5 +1,5 @@
 #include "my_ls.h"
-
+/*
 void				display(t_list *file, t_list *begin)
 {
 	begin = file;
@@ -18,6 +18,7 @@ t_list				*check_subdir(t_list *file)
 	t_list			*begin;	
 	DIR				*dir;
 
+	(void)dir;
 	begin = file;
 	while (file->next)
 	{
@@ -25,7 +26,7 @@ t_list				*check_subdir(t_list *file)
 		{
 			//stock_files(file->content, file);
 			printf("\n");
-			printf("%s:\n", file->content);
+			printf("%p:\n", file->content);
 			dir = opendir(file->content);
 	//		block_bytes(file, begin);
 			display(file, begin);
@@ -46,7 +47,7 @@ void					recursive(t_list *file, int size)
 		file = file->next;
 		if (is_notdot(current))
 			check_subdir(current);
-		printf("%s \n", file->content);
+		printf("%p \n", file->content);
 		recursive(file,  size);
 	}
 }
@@ -59,7 +60,7 @@ void					check_dir(t_list *file, char *path, int size)
 	begin = file;
 	printf("%s:\n", path);
 //	stock_files(path, file);
-	block_bytes(file, begin);
+//	block_bytes(file, begin);
 	display(file, begin);
 	recursive(file, size);
-}
+}*/
