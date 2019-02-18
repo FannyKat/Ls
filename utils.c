@@ -1,68 +1,79 @@
-#include "my_ls.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/01/21 19:30:28 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/18 14:12:47 by maboye           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void			*error(char *str)
+#include "ft_ls.h"
+
+void			block_bytes(t_list *file)
 {
-	ft_putstr(str);
+	struct stat		fd;
+	t_data			bytes;
+	t_list			*begin;
+
+	begin = file;
+	bytes.total = 0;
+	while (file->next)
+	{
+		lstat(file->content, &fd);
+		bytes.total += fd.st_blocks;
+		file = file->next;
+	}
+	file = begin;
+	ft_printf("total %d\n", (int)bytes.total);
+}
+
+void			error(char *str)
+{
+	ft_printf("%s\n", str);
 	exit(EXIT_FAILURE);
 }
 
-int 			isdir(char *path)
+void			handle_option(struct stat fd, int flags)
 {
-	struct stat 	buf;
-
-	lstat(path, &buf);
-	return ((buf.st_mode & S_IFMT) == S_IFDIR);
-}
-
-int			isdot(char *dot)
-{
-	int		cpt;
-
-	cpt = 0;
-	(*dot++ == '.') ? cpt++ : 0;
-	(*dot == '.') ? cpt++ : 0;
-	return ((cpt == 1 || cpt == 2 ) ? 1 : 0);
-}
-
-void			walking_files(int flags, t_list *files)
-{
-	t_list		*head;
-
-	head = files;
-	sort(files, flags);
-	while (files->next)
+	if (flags & U_FLAG)
 	{
-		if (!(flags & FLAG_A) && isdot(files->data))
-		{
-			files = files->next;
-			continue ;
-		}
-		if ((flags & FLAG_L) && !isdir(files->data))
-			inspect_file(files->data);
-		if (!(flags & FLAG_L) && !isdir(files->data))
-			printf("%s\n", get_name(files->data));
-		files = files->next;
+		write(1, ctime(&fd.st_atime) + 4,
+			ft_strlen(ctime(&fd.st_atime) + 4) - 9);
 	}
-	files = head;
+	else
+		write(1, ctime(&fd.st_mtime) + 4,
+			ft_strlen(ctime(&fd.st_mtime) + 4) - 9);
+	ft_putchar(' ');
 }
-/*
-void				walking_dir(int flags, t_list *files)
-{
-	t_list			*head;
 
-	head = files;
-	while (files->next)
+int				int_len(int nb)
+{
+	int		count;
+
+	count = 0;
+	while (nb >= 10)
 	{
-		if (!(flags & FLAG_A) && isdot(files->data))
-		{
-			files = files->next;
-			continue ;
-		}
-		if ((flags & FLAG_L) && isdir(files->content))
-			inspect_file(files->content);
-		if (!(flags & FLAG_L) && isdir(files->content))
-			printf("\033[1;34m%s\033[0m\n", get_name(files->data));
-		files = files->next;
+		nb /= 10;
+		count++;
 	}
-	files = head;
-}*/
+	return (count + 1);
+}
+
+int				is_dot(char *str, int choose)
+{
+	int	size;
+
+	size = ft_strlen(str);
+	if (choose)
+	{
+		if (!ft_strcmp(str, "."))
+			return (1);
+		if (!ft_strcmp(str, ".."))
+			return (1);
+		return (0);
+	}
+	return (*str == '.' ? 1 : 0);
+}

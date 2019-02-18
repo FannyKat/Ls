@@ -1,32 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort.c                                             :+:      :+:    :+:   */
+/*   ft_readfile.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/08 03:21:18 by maboye            #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:18 by maboye           ###   ########.fr       */
+/*   Created: 2018/11/26 16:17:32 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/08 11:28:37 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-void			sort_av(char **av)
+char		*ft_readfile(char *file)
 {
-	int		size;
+	int		ret;
 	int		x;
-	int		y;
+	char	buf[BUFF_SIZE + 1];
+	char	*str;
 
-	size = -1;
-	while (av[++size])
-		;
-	y = 0;
-	while (++y < size)
+	if (!file || BUFF_SIZE < 0)
+		return (NULL);
+	x = open(file, O_RDONLY);
+	while ((ret = read(x, buf, BUFF_SIZE)))
 	{
-		x = 0;
-		while (++x < size - 1)
-			if (ft_strcmp(av[x + 1], av[x]) < 0)
-				ft_swap((void**)&av[x + 1], (void**)&av[x]);
+		if (ret == -1)
+			return (NULL);
+		buf[ret] = '\0';
+		!str ? str = ft_strnew(1) : 0;
+		str = ft_strfjoin(str, buf);
 	}
+	close(x);
+	return (str);
 }

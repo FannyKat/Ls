@@ -1,32 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort.c                                             :+:      :+:    :+:   */
+/*   ft_lstpushfront.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/08 03:21:18 by maboye            #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:18 by maboye           ###   ########.fr       */
+/*   Created: 2018/08/20 03:08:40 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/08 11:26:51 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-void			sort_av(char **av)
+void		ft_lstpushfront(t_list **begin_list, void *data)
 {
-	int		size;
-	int		x;
-	int		y;
+	t_list	*tmp;
 
-	size = -1;
-	while (av[++size])
-		;
-	y = 0;
-	while (++y < size)
-	{
-		x = 0;
-		while (++x < size - 1)
-			if (ft_strcmp(av[x + 1], av[x]) < 0)
-				ft_swap((void**)&av[x + 1], (void**)&av[x]);
-	}
+	tmp = ft_lstaddelem(data);
+	tmp->next = *begin_list;
+	*begin_list = tmp;
 }

@@ -1,76 +1,121 @@
-#include "my_ls.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   display.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/08 05:04:07 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/18 17:06:48 by fcatusse         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void			block_bytes(int flags, t_list *file)
+#include "ft_ls.h"
+
+static void		print_mode(mode_t fd)
 {
-	struct stat 	fd;
-	t_data		bytes;
-	t_list		*begin;
-
-	begin = file;
-	bytes.total = 0;
-	while (file->next)
-	{
-		stat(file->content, &fd);
-		if (!(flags & FLAG_A) && isdot(file->data))
-		{
-			file = file->next;
-			continue ;
-		}
-		bytes.total += fd.st_blocks;
-		file = file->next;
-	}
-	file = begin;
-	printf("total %llu\n", bytes.total);
+	write(1, (S_IRUSR & fd) ? "r" : "-", 1);
+	write(1, (S_IWUSR & fd) ? "w" : "-", 1);
+	write(1, (S_IXUSR & fd) ? "x" : "-", 1);
+	write(1, (S_IRGRP & fd) ? "r" : "-", 1);
+	write(1, (S_IWGRP & fd) ? "w" : "-", 1);
+	write(1, (S_IXGRP & fd) ? "x" : "-", 1);
+	write(1, (S_IROTH & fd) ? "r" : "-", 1);
+	write(1, (S_IWOTH & fd) ? "w" : "-", 1);
+	write(1, (S_IXOTH & fd) ? "x " : "- ", 2);
 }
 
-char			*get_name(char *av)
+static char		*get_mode(struct stat elem, char *path)
 {
-	char		*str;
-	int		i;
+	char	*str;
 
-	i = ft_strlen(av);
-	while (i > 0 && av[i] != '/')
-		i--;
-	i = av[i] == '/' ? i + 1 : i;
-	str = ft_strdup(av + i);
+	str = NULL;
+	S_ISBLK(elem.st_mode) ? write(1, "b", 1) : 0;
+	S_ISCHR(elem.st_mode) ? write(1, "c", 1) : 0;
+	S_ISDIR(elem.st_mode) ? write(1, "d", 1) : 0;
+	if (S_ISLNK(elem.st_mode))
+	{
+		readlink(path, str = ft_strnew(elem.st_size), elem.st_size);
+		write(1, "l", 1);
+	}
+	S_ISSOCK(elem.st_mode) ? write(1, "s", 1) : 0;
+	S_ISFIFO(elem.st_mode) ? write(1, "p", 1) : 0;
+	S_ISREG(elem.st_mode) ? write(1, "-", 1) : 0;
 	return (str);
 }
 
-char			*get_date(char *av)
+static void		stock_info(t_data *info, void **addr)
 {
-	av = ft_strsub(av, 4, ft_strlen(av) - (4 + 9));
-	return (av);
-}
-
-void 			get_mode(mode_t fd)
-{ 
-	printf("%s", S_IRUSR & (fd) ? "r" : "-");
-	printf("%s", S_IWUSR & (fd) ? "w" : "-");
-	printf("%s", S_IXUSR & (fd) ? "x" : "-");
-	printf("%s", S_IRGRP & (fd) ? "r" : "-");
-	printf("%s", S_IWGRP & (fd) ? "w" : "-");
-	printf("%s", S_IXGRP & (fd) ? "x" : "-");
-	printf("%s", S_IROTH & (fd) ? "r" : "-");
-	printf("%s", S_IWOTH & (fd) ? "w" : "-");
-	printf("%s ", S_IXOTH & (fd) ? "x " : "- ");
-}
-
-void 			inspect_file(char *path)
-{
-	struct stat 	fd;
+	int				i;
+	struct stat		elem;
 	struct passwd	*getuid;
 	struct group	*getgid;
+	int				len;
 
-	stat(path, &fd);
-	getuid = getpwuid(fd.st_uid);
-	getgid = getgrgid(fd.st_gid);
-	printf("%s", S_ISDIR (fd.st_mode) ? "d" : "-");
-	get_mode(fd.st_mode);
-	printf("%lu ", fd.st_nlink);
-	printf("%s ", getuid->pw_name);
-	printf("%s ", getgid->gr_name);
-	printf("%ld ", fd.st_size);
-	printf("%s ", get_date(ctime(&fd.st_mtime)));
-	S_ISDIR (fd.st_mode) ? printf("\033[1;34m%s\033[0m\n", get_name(path)) : 
-	printf("%s\n", get_name(path));
+	len = 0;
+	i = -1;
+	info->uid = len;
+	info->gid = len;
+	while (addr[++i])
+	{
+		lstat(((t_list*)addr[i])->content, &elem);
+		info->weight = info->weight < elem.st_size ?
+			elem.st_size : info->weight;
+		info->link = info->link < elem.st_nlink ? elem.st_nlink : info->link;
+		getuid = getpwuid(1);
+		getgid = getgrgid(1);
+		len = ft_strlen(getuid->pw_name);
+		info->uid = info->uid < len ? len : info->uid;
+		len = ft_strlen(getgid->gr_name);
+		info->gid = info->gid < len ? len : info->gid;
+	}
+	info->weight = int_len(info->weight);
+	info->link = int_len(info->link);
+}
+
+static void		print_padding(struct stat fd, t_data *info,
+				struct passwd *getuid, struct group *getgid)
+{
+	int		flags;
+
+	flags = info->flags;
+	ft_padding(info->link - int_len(fd.st_nlink));
+	ft_printf("%d ", (int)fd.st_nlink);
+	if (!(flags & FLAG))
+	{
+		ft_padding(info->uid - ft_strlen(getuid->pw_name));
+		ft_printf("%s ", getuid->pw_name);
+	}
+	ft_padding(info->gid - ft_strlen(getgid->gr_name));
+	ft_printf("%s ", getgid->gr_name); 
+	ft_padding(info->weight - int_len(fd.st_size));
+	ft_printf("%d ", (int)fd.st_size);
+}
+
+void			long_listing(void **addr, int flags, int i)
+{
+	struct stat		fd;
+	struct passwd	*getuid;
+	struct group	*getgid;
+	char			*str;
+	t_data			*info;
+
+	if (!(info = malloc(sizeof(t_data))))
+		return ;
+	stock_info(info, addr);
+	info->flags = flags;
+	while (addr[++i])
+	{
+		lstat(((t_list*)addr[i])->content, &fd);
+		getuid = getpwuid(fd.st_uid);
+		getgid = getgrgid(fd.st_gid);
+		str = get_mode(fd, ((t_list*)addr[i])->content);
+		print_mode(fd.st_mode);
+		print_padding(fd, info, getuid, getgid);
+		handle_option(fd, flags);
+		print_color(fd, ((t_list*)addr[i])->data, flags);
+		S_ISLNK(fd.st_mode) ? ft_printf(" -> %s\n", str) : ft_putchar('\n');
+		ft_strdel(&str);
+	}
+	ft_memdel((void**)(&info));
 }

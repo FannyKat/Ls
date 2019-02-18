@@ -1,32 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort.c                                             :+:      :+:    :+:   */
+/*   ft_power.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/08 03:21:18 by maboye            #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:18 by maboye           ###   ########.fr       */
+/*   Created: 2018/11/12 22:52:22 by maboye            #+#    #+#             */
+/*   Updated: 2018/11/23 06:48:49 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-void			sort_av(char **av)
+float		ft_power(int nb, int po)
 {
-	int		size;
-	int		x;
-	int		y;
+	float		result;
 
-	size = -1;
-	while (av[++size])
-		;
-	y = 0;
-	while (++y < size)
-	{
-		x = 0;
-		while (++x < size - 1)
-			if (ft_strcmp(av[x + 1], av[x]) < 0)
-				ft_swap((void**)&av[x + 1], (void**)&av[x]);
-	}
+	if (po == 0)
+		return (1);
+	result = ft_power(nb, po / 2);
+	if (po % 2 == 0)
+		return (result * result);
+	else
+		return (po > 0 ? nb * result * result : (result * result) / nb);
 }

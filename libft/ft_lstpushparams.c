@@ -1,32 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort.c                                             :+:      :+:    :+:   */
+/*   ft_lstpushparams.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/08 03:21:18 by maboye            #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:18 by maboye           ###   ########.fr       */
+/*   Created: 2018/08/22 02:19:05 by maboye            #+#    #+#             */
+/*   Updated: 2018/11/13 18:36:35 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-void			sort_av(char **av)
+t_list		*ft_lstpushparams(int ac, char **av)
 {
-	int		size;
-	int		x;
-	int		y;
+	t_list	*temp;
+	int		i;
 
-	size = -1;
-	while (av[++size])
-		;
-	y = 0;
-	while (++y < size)
-	{
-		x = 0;
-		while (++x < size - 1)
-			if (ft_strcmp(av[x + 1], av[x]) < 0)
-				ft_swap((void**)&av[x + 1], (void**)&av[x]);
-	}
+	temp = 0;
+	if (!ac)
+		return (0);
+	i = -1;
+	while (++i < ac)
+		ft_lstpushfront(&temp, av[i]);
+	return (temp);
 }

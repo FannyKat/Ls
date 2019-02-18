@@ -1,32 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort.c                                             :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/08 03:21:18 by maboye            #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:18 by maboye           ###   ########.fr       */
+/*   Created: 2018/11/07 15:37:28 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/08 11:29:23 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-void			sort_av(char **av)
+char		*ft_strjoin(char const *s1, char const *s2)
 {
-	int		size;
-	int		x;
-	int		y;
+	char	*tmp;
+	size_t	x;
+	size_t	y;
+	size_t	len_s1;
+	size_t	len_s2;
 
-	size = -1;
-	while (av[++size])
-		;
-	y = 0;
-	while (++y < size)
-	{
-		x = 0;
-		while (++x < size - 1)
-			if (ft_strcmp(av[x + 1], av[x]) < 0)
-				ft_swap((void**)&av[x + 1], (void**)&av[x]);
-	}
+	if (!s1 || !s2)
+		return (NULL);
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	if (!(tmp = ft_strnew(len_s1 + len_s2)))
+		return (NULL);
+	x = -1;
+	y = -1;
+	while (++x < len_s1)
+		tmp[x] = s1[x];
+	while (++y < len_s2)
+		tmp[x++] = s2[y];
+	return (tmp);
 }

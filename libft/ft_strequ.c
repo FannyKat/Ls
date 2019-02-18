@@ -1,32 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort.c                                             :+:      :+:    :+:   */
+/*   ft_strequ.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/08 03:21:18 by maboye            #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:18 by maboye           ###   ########.fr       */
+/*   Created: 2018/11/07 15:37:09 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/08 11:29:15 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-void			sort_av(char **av)
+int			ft_strequ(char const *s1, char const *s2)
 {
-	int		size;
-	int		x;
-	int		y;
-
-	size = -1;
-	while (av[++size])
-		;
-	y = 0;
-	while (++y < size)
-	{
-		x = 0;
-		while (++x < size - 1)
-			if (ft_strcmp(av[x + 1], av[x]) < 0)
-				ft_swap((void**)&av[x + 1], (void**)&av[x]);
-	}
+	if (!s1 || !s2)
+		return (0);
+	return (ft_strcmp(s1, s2) ? 0 : 1);
 }

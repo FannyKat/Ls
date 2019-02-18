@@ -1,32 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort.c                                             :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/08 03:21:18 by maboye            #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:18 by maboye           ###   ########.fr       */
+/*   Created: 2018/11/06 11:46:31 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/08 11:29:32 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-void			sort_av(char **av)
+size_t		ft_strlcat(char *dest, const char *src, size_t size)
 {
-	int		size;
-	int		x;
-	int		y;
+	size_t	i;
+	size_t	dest_len;
 
-	size = -1;
-	while (av[++size])
-		;
-	y = 0;
-	while (++y < size)
-	{
-		x = 0;
-		while (++x < size - 1)
-			if (ft_strcmp(av[x + 1], av[x]) < 0)
-				ft_swap((void**)&av[x + 1], (void**)&av[x]);
-	}
+	i = 0;
+	dest_len = ft_strlen(dest);
+	if (size < dest_len)
+		return (size + ft_strlen((char*)src));
+	while (src[i] && dest_len < size - 1)
+		dest[dest_len++] = src[i++];
+	dest[dest_len] = '\0';
+	return (ft_strlen((char*)src) + dest_len - i);
 }

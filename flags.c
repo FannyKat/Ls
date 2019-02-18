@@ -1,50 +1,81 @@
-#include "my_ls.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   flags.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/02/09 23:11:47 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/11 09:46:20 by maboye           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int				check_flags(int flags, char *av)
+#include "ft_ls.h"
+
+static int		bonus_flags(char c, int flags)
 {
-	int			i;
-
-	i = 0;
-	while (av[i++])
+	if (c == 'C' && !(flags & C_FLAG))
+		flags += C_FLAG;
+	else if (c == 'g' && !(flags & FLAG))
+		flags += FLAG;
+	if (c == '1' && !(flags & ONE_FLAG))
 	{
-		if (av[i] == 'a' && !(flags & FLAG_A))
-			flags += FLAG_A;
-		if (av[i] == 'l' && !(flags & FLAG_L))
-			flags += FLAG_L;
-		if (av[i] == 'R' && !(flags & FLAG_R))
-			flags += FLAG_R;
-		if (av[i] == 'r' && !(flags & FLAG_REV))
-			flags += FLAG_REV;
-		if (av[i] == 't' && !(flags & FLAG_T))
-			flags += FLAG_T;
+		flags = (flags & L_FLAG) ? flags -= L_FLAG : flags;
+		flags = (flags & C_FLAG) ? flags -= C_FLAG : flags;
+		flags = (flags & FLAG) ? flags -= FLAG : flags;
 	}
+	else if (c == 'A' && !(flags & DOT_FLAG))
+		flags += DOT_FLAG;
+	else if (c == 'd' && !(flags & D_FLAG))
+		flags += D_FLAG;
+	else if (c == 'f' && !(flags & F_FLAG))
+		flags += F_FLAG;
+	else if (c == 'G' && !(flags & G_FLAG))
+		flags += G_FLAG;
+	else if (c == 'u' && !(flags & U_FLAG))
+		flags += U_FLAG;
+	else
+		flags = flags == 0 ? -1 : flags;
 	return (flags);
 }
 
-int				check_dash(int *i, char **av)
+static int		check_flags(char *str, int flags)
 {
-	int			flags;
+	int		i;
 
-	flags = 0;
-	while (av[*i])
+	i = 0;
+	while (str[++i])
 	{
-		if (av[*i][0] == '-')
-		{
-			if (av[*i][1] == '-')
-			{
-				(*i)++;
-				return (0);
-			}
-			flags += check_flags(flags, av[*i]);
-			av[*i]++;
-		}
+		if (str[i] == 'a' && !(flags & A_FLAG))
+			flags += A_FLAG;
+		else if (str[i] == 'l' && !(flags & L_FLAG))
+			flags += L_FLAG;
+		else if (str[i] == 'R' && !(flags & R_FLAG))
+			flags += R_FLAG;
+		else if (str[i] == 'r' && !(flags & REV_FLAG))
+			flags += REV_FLAG;
+		else if (str[i] == 't' && !(flags & T_FLAG))
+			flags += T_FLAG;
+		else if (bonus_flags(str[i], flags) == -1)
+			error("ls: illegal option error\
+			\nusage: ls [ -1AaCdfGglRtu -- ] [file ...]");
 		else
+			flags = bonus_flags(str[i], flags);
+	}
+	return ((flags & F_FLAG) ? A_FLAG + C_FLAG + F_FLAG + R_FLAG : flags);
+}
+
+int				parsing(int *i, int ac, char **av, int flags)
+{
+	while (++(*i) < ac && av[*i][0] == '-' && av[*i][1])
+	{
+		if (av[*i][1] == '-')
 		{
 			(*i)++;
-			if (flags == 0 && av[1][0] == '-')
-				error("ls: illegal option -- \nusage: ls [-ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1] [file ...]\n");
 			return (flags);
 		}
+		flags = check_flags(av[*i], flags);
 	}
+	(flags & C_FLAG) && !isatty(STDOUT_FILENO) ? flags -= C_FLAG : 0;
 	return (flags);
 }

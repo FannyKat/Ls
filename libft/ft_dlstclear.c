@@ -1,32 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort.c                                             :+:      :+:    :+:   */
+/*   ft_dlstclear.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/08 03:21:18 by maboye            #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:18 by maboye           ###   ########.fr       */
+/*   Created: 2018/11/13 15:07:14 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/08 11:24:27 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-void			sort_av(char **av)
+t_dlist		*ft_dlstclear(t_dlist *li)
 {
-	int		size;
-	int		x;
-	int		y;
-
-	size = -1;
-	while (av[++size])
-		;
-	y = 0;
-	while (++y < size)
+	if (li)
 	{
-		x = 0;
-		while (++x < size - 1)
-			if (ft_strcmp(av[x + 1], av[x]) < 0)
-				ft_swap((void**)&av[x + 1], (void**)&av[x]);
+		while (!ft_dlstisempty(li))
+			li = ft_dlstpopback(li);
 	}
+	return (NULL);
 }

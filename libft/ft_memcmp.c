@@ -1,32 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort.c                                             :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/08 03:21:18 by maboye            #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:18 by maboye           ###   ########.fr       */
+/*   Created: 2018/11/06 11:46:02 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/08 11:27:32 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-void			sort_av(char **av)
+int			ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	int		size;
-	int		x;
-	int		y;
+	unsigned char	*s1_tmp;
+	unsigned char	*s2_tmp;
+	size_t			x;
 
-	size = -1;
-	while (av[++size])
+	if (!s1 || !s2)
+		return (0);
+	s1_tmp = (unsigned char*)s1;
+	s2_tmp = (unsigned char*)s2;
+	x = -1;
+	while (++x < n && s1_tmp[x] == s2_tmp[x])
 		;
-	y = 0;
-	while (++y < size)
-	{
-		x = 0;
-		while (++x < size - 1)
-			if (ft_strcmp(av[x + 1], av[x]) < 0)
-				ft_swap((void**)&av[x + 1], (void**)&av[x]);
-	}
+	if (x == n)
+		return (0);
+	return (s1_tmp[x] - s2_tmp[x]);
 }

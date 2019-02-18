@@ -1,32 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort.c                                             :+:      :+:    :+:   */
+/*   ft_capitalize.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/08 03:21:18 by maboye            #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:18 by maboye           ###   ########.fr       */
+/*   Created: 2018/11/12 22:51:29 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/08 11:25:03 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-void			sort_av(char **av)
+char		*ft_capitalize(char *s)
 {
-	int		size;
-	int		x;
-	int		y;
+	char	*new;
+	int		i;
 
-	size = -1;
-	while (av[++size])
-		;
-	y = 0;
-	while (++y < size)
-	{
-		x = 0;
-		while (++x < size - 1)
-			if (ft_strcmp(av[x + 1], av[x]) < 0)
-				ft_swap((void**)&av[x + 1], (void**)&av[x]);
-	}
+	if (!s || !(new = ft_strnew(ft_strlen(s))))
+		return (NULL);
+	new[0] = ft_toupper(s[0]);
+	i = 0;
+	while (s[++i])
+		if (!ft_isalnum(s[i - 1]) && ft_isalnum(s[i]))
+			new[i] = ft_toupper(s[i]);
+		else
+			new[i] = s[i];
+	return (new);
 }

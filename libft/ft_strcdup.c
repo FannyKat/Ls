@@ -1,32 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort.c                                             :+:      :+:    :+:   */
+/*   ft_strcdup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/08 03:21:18 by maboye            #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:18 by maboye           ###   ########.fr       */
+/*   Created: 2018/11/21 00:42:00 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/08 11:40:19 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-void			sort_av(char **av)
+char		*ft_strcdup(char *src, char c)
 {
-	int		size;
-	int		x;
-	int		y;
+	char	*dst;
+	int		i;
 
-	size = -1;
-	while (av[++size])
-		;
-	y = 0;
-	while (++y < size)
+	i = 0;
+	if (!src)
+		return (NULL);
+	while (src[i] != '\0' && src[i] != c)
+		i++;
+	if (!(dst = (char *)malloc((i + 1) * sizeof(char))))
+		return (NULL);
+	i = 0;
+	while (src[i] != '\0' && src[i] != c)
 	{
-		x = 0;
-		while (++x < size - 1)
-			if (ft_strcmp(av[x + 1], av[x]) < 0)
-				ft_swap((void**)&av[x + 1], (void**)&av[x]);
+		dst[i] = src[i];
+		i++;
 	}
+	dst[i] = '\0';
+	return (dst);
 }

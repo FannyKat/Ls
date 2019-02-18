@@ -1,32 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort.c                                             :+:      :+:    :+:   */
+/*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maboye <maboye@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/08 03:21:18 by maboye            #+#    #+#             */
-/*   Updated: 2019/02/18 14:42:18 by maboye           ###   ########.fr       */
+/*   Created: 2018/08/20 03:28:53 by maboye            #+#    #+#             */
+/*   Updated: 2019/02/11 04:14:22 by maboye           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ls.h"
+#include "libft.h"
 
-void			sort_av(char **av)
+int			ft_lstsize(t_list *source)
 {
-	int		size;
-	int		x;
-	int		y;
+	int		count;
+	t_list	*begin;
 
-	size = -1;
-	while (av[++size])
-		;
-	y = 0;
-	while (++y < size)
+	count = 1;
+	if (!source)
+		return (0);
+	begin = source;
+	while (source->next)
 	{
-		x = 0;
-		while (++x < size - 1)
-			if (ft_strcmp(av[x + 1], av[x]) < 0)
-				ft_swap((void**)&av[x + 1], (void**)&av[x]);
+		count++;
+		source = source->next;
 	}
+	source = begin;
+	return (count);
 }
