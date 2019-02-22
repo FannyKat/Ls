@@ -38,7 +38,7 @@ void			list_contents(int flags, int i, int j, char **av)
 	while (i < j)
 	{
 		if (!isdir(av[i]))
-		{	
+		{
 			stock_data(av[i], files);
 			if (cpt == 0)
 				head = files;

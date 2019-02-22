@@ -25,6 +25,7 @@ typedef struct		s_data
 }					t_data;
 
 void			*error(char *str);
+void			check_errno(char *path);
 void			inspect_file(int flags, char *av);
 void			block_bytes(int flags, t_list *file);
 int				isdot(char *dot);

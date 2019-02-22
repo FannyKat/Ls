@@ -11,7 +11,7 @@ int 			isdir(char *path)
 	struct stat 	buf;
 
 	lstat(path, &buf);
-	return ((buf.st_mode & S_IFMT) == S_IFDIR);
+	return (S_ISDIR(buf.st_mode) ? 1 : 0);
 }
 
 int			isdot(char *dot)
@@ -22,6 +22,15 @@ int			isdot(char *dot)
 	(*dot++ == '.') ? cpt++ : 0;
 	(*dot == '.') ? cpt++ : 0;
 	return ((cpt == 1 || cpt == 2 ) ? 1 : 0);
+}
+
+void			check_errno(char *path)
+{
+	if (errno == EACCES)
+	{
+		printf("ft_ls: %s: Permission denied\n", path);
+		//exit(EXIT_FAILURE);
+	}
 }
 
 void			put_colors(struct stat fd, char *path, int flags)
@@ -59,9 +68,6 @@ void			walking_files(int flags, t_list *files)
 	sort(files, flags);
 	while (files->next)
 	{
-		lstat(files->content, &fd);
-		if (errno == EACCES)
-			printf("ft_ls: %s: Permission denied\n", files->data);
 		if (!(flags & FLAG_A) && isdot(files->data))
 		{
 			files = files->next;
@@ -70,7 +76,7 @@ void			walking_files(int flags, t_list *files)
 		if ((flags & FLAG_L) && !isdir(files->data))
 			inspect_file(flags, files->data);
 		if (!(flags & FLAG_L) && !isdir(files->data))
-			printf("%s\n", get_name(files->data));
+			printf("%s\n", get_name(files->content));
 		files = files->next;
 	}
 	files = head;

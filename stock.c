@@ -10,17 +10,22 @@ void			stock_dir(char *path, t_list *dir)
 	curr_dir = opendir(path);
 	head = dir;
 	path = ft_strjoin(path, "/");
-	while ((current = readdir(curr_dir)) != NULL)
-	{	
-		dir->content = ft_strdup(path);
-		dir->content = ft_strjoin(path, current->d_name);
-		dir->size = current->d_type;
-		dir->data = ft_strdup(current->d_name);
-		dir->next = ft_xlstadd(NULL);
-		dir = dir->next;
+	if (curr_dir)
+	{
+		while ((current = readdir(curr_dir)) != NULL)
+		{	
+			dir->content = ft_strdup(path);
+			dir->content = ft_strjoin(path, current->d_name);
+			dir->size = current->d_type;
+			dir->data = ft_strdup(current->d_name);
+			dir->next = ft_xlstadd(NULL);
+			dir = dir->next;
+		}
+		dir = head;
+		closedir(curr_dir);
 	}
-	dir = head;
-	closedir(curr_dir);
+	else
+		(errno == EACCES) ? check_errno(path) : 0;
 }
 
 void			check_subdir(t_list *curr, t_list *subdir, int flags)
@@ -46,6 +51,7 @@ void			check_subdir(t_list *curr, t_list *subdir, int flags)
 
 void			stock_data(char *path, t_list *files)
 {
+	printf("%s\n", path);
 	files->data = ft_strdup(path);
 	files->content = ft_strdup(path);
 	files->size = 8;
