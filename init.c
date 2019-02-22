@@ -27,12 +27,12 @@ void			print_list(int flags, t_list *files)
 
 void			list_contents(int flags, int i, int j, char **av)
 {
-	struct stat	fd;
 	t_list		*files;
 	t_list		*head;
 	t_list		*dir;
-	int			cpt = 0;
+	int			cpt;
 
+	cpt = 0;
 	files = ft_xlstadd(NULL);
 	dir = ft_xlstadd(NULL);
 	while (i < j)

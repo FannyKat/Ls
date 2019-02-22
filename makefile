@@ -15,21 +15,21 @@ END		=	\033[1;34m
 
 
 $(NAME):	$(OBJ)
-	@make -C ../libft
+	@make -C ./lib
 	@echo "${BLUE}LIBRARY COMPILED${END}"
-	@$(CC) $(CFLAGS) ${SRC} ../libft/libft.a -o $(NAME)
+	@$(CC) $(CFLAGS) ${SRC} ./lib/libft.a -o $(NAME)
 	@echo "${PURPLE}LS COMPILED${END}"
 
 all:		$(NAME)
 
 clean:
 	@/bin/rm -rf $(OBJ)
-	@make -C ../libft/ clean
+	@make -C ./lib/ clean
 	@echo "${BLUE}clean obj${END}"
 
 fclean:		clean
 	@/bin/rm -rf $(NAME)
-	@make -C ../libft/ fclean
+	@make -C ./lib/ fclean
 	@echo "${BLUE}clean $(NAME)${END}"
 
 re:			fclean all
