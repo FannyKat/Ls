@@ -6,7 +6,7 @@
 /*   By: fcatusse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/06 16:05:44 by fcatusse          #+#    #+#             */
-/*   Updated: 2018/11/06 16:05:46 by fcatusse         ###   ########.fr       */
+/*   Updated: 2019/02/22 20:10:08 by fcatusse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,6 @@
 
 void	ft_putstr(char const *s)
 {
-	ft_putstr_fd(s, 1);
+	while (s && *s)
+		ft_putchar(*s++);
 }
