@@ -2,6 +2,10 @@
 
 void			print_list(int flags, t_list *files)
 {
+	struct stat	fd;
+	t_list		*head;
+
+	head = files;
 	while (files->next)
 	{
 		if (!(flags & FLAG_A) && isdot(files->data))
@@ -10,27 +14,32 @@ void			print_list(int flags, t_list *files)
 			continue ;
 		}
 		if (flags & FLAG_L)
-			inspect_file(files->content);
+			inspect_file(flags, files->content);
 		if (!(flags & FLAG_L))
-			printf("%s\n", get_name(files->data));
+		{
+			lstat(files->content, &fd);
+			put_colors(fd, files->data, flags);
+		}
 		files = files->next;
 	}
+	files = head;
 }
 
 void			list_contents(int flags, int i, int j, char **av)
 {
+	struct stat	fd;
 	t_list		*files;
 	t_list		*head;
 	t_list		*dir;
-	int		cpt = 0;
+	int			cpt = 0;
 
 	files = ft_xlstadd(NULL);
 	dir = ft_xlstadd(NULL);
 	while (i < j)
 	{
 		if (!isdir(av[i]))
-		{
-			stock_data(flags, av[i], files);
+		{	
+			stock_data(av[i], files);
 			if (cpt == 0)
 				head = files;
 			files = files->next;

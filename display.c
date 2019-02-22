@@ -3,8 +3,8 @@
 void			block_bytes(int flags, t_list *file)
 {
 	struct stat 	fd;
-	t_data		bytes;
-	t_list		*begin;
+	t_data			bytes;
+	t_list			*begin;
 
 	begin = file;
 	bytes.total = 0;
@@ -44,33 +44,47 @@ char			*get_date(char *av)
 
 void 			get_mode(mode_t fd)
 { 
-	printf("%s", S_IRUSR & (fd) ? "r" : "-");
-	printf("%s", S_IWUSR & (fd) ? "w" : "-");
-	printf("%s", S_IXUSR & (fd) ? "x" : "-");
-	printf("%s", S_IRGRP & (fd) ? "r" : "-");
-	printf("%s", S_IWGRP & (fd) ? "w" : "-");
-	printf("%s", S_IXGRP & (fd) ? "x" : "-");
-	printf("%s", S_IROTH & (fd) ? "r" : "-");
-	printf("%s", S_IWOTH & (fd) ? "w" : "-");
-	printf("%s ", S_IXOTH & (fd) ? "x " : "- ");
+	write(1, S_IRUSR & fd ? "r" : "-", 1);
+	write(1, S_IWUSR & fd ? "w" : "-", 1);
+	if (S_IXUSR & fd)
+		write(1, S_ISVTX & fd ? "s" : "x", 1);
+	else
+		write(1, S_ISVTX & fd ? "S" : "-", 1);
+	write(1, S_IRGRP & fd ? "r" : "-", 1);
+	write(1, S_IWGRP & fd ? "w" : "-", 1);
+	if (S_IXGRP & fd)
+		write(1, S_ISVTX & fd ? "s" : "x", 1);
+	else
+		write(1, S_ISVTX & fd ? "S" : "-", 1);
+	write(1, S_IROTH & fd ? "r" : "-", 1);
+	write(1, S_IWOTH & fd ? "w" : "-", 1);
+	if (S_IXOTH & fd)
+		write(1, S_ISGID & fd ? "t " : "x ", 2);
+	else
+		write(1, S_ISGID & fd ? "T " : "- ", 2);
 }
 
-void 			inspect_file(char *path)
+void 			inspect_file(int flags, char *path)
 {
 	struct stat 	fd;
 	struct passwd	*getuid;
 	struct group	*getgid;
 
-	stat(path, &fd);
+	lstat(path, &fd);
 	getuid = getpwuid(fd.st_uid);
 	getgid = getgrgid(fd.st_gid);
-	printf("%s", S_ISDIR (fd.st_mode) ? "d" : "-");
+	S_ISREG (fd.st_mode) ? write(1, "-", 1) : 0;
+	S_ISBLK (fd.st_mode) ? write(1, "b", 1) : 0;
+	S_ISCHR (fd.st_mode) ? write(1, "c", 1) : 0;
+	S_ISDIR (fd.st_mode) ? write(1, "d", 1) : 0;
+	S_ISFIFO (fd.st_mode) ? write(1, "p", 1) : 0;
+	S_ISLNK (fd.st_mode) ? write(1, "l", 1) : 0;
+	S_ISSOCK (fd.st_mode) ? write(1, "s", 1) : 0;
 	get_mode(fd.st_mode);
-	printf("%lu ", fd.st_nlink);
+	printf("%u ", fd.st_nlink);
 	printf("%s ", getuid->pw_name);
 	printf("%s ", getgid->gr_name);
-	printf("%ld ", fd.st_size);
+	printf("%lld ", fd.st_size);
 	printf("%s ", get_date(ctime(&fd.st_mtime)));
-	S_ISDIR (fd.st_mode) ? printf("\033[1;34m%s\033[0m\n", get_name(path)) : 
-	printf("%s\n", get_name(path));
+	put_colors(fd, path, flags);
 }
