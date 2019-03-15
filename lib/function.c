@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstmerge.c                                      :+:      :+:    :+:   */
+/*   function.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fcatusse <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/12 17:09:05 by fcatusse          #+#    #+#             */
-/*   Updated: 2019/02/12 17:12:55 by fcatusse         ###   ########.fr       */
+/*   Created: 2019/03/15 11:59:32 by fcatusse          #+#    #+#             */
+/*   Updated: 2019/03/15 13:03:28 by fcatusse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void		ft_lstmerge(t_list *list1, t_list *list2)
+void	fun_c(va_list *ap)
 {
-	t_list	*begin;
+	ft_putchar(va_arg(*ap, int));
+}
 
-	begin = list1;
-	if (!list1 || !list2)
-		return ;
-	while (list1->next)
-		list1 = list1->next;
-	list1->next = list2;
+void	fun_s(va_list *ap)
+{
+	ft_putstr(va_arg(*ap, char*));
+}
+
+void	fun_d(va_list *ap)
+{
+	ft_putnbr(va_arg(*ap, int));
 }

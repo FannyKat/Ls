@@ -2,7 +2,7 @@
 # define LS_H
 
 # include <fcntl.h>
-# include "../libft/libft.h"
+# include "lib/libft.h"
 #include <unistd.h>
 # include <dirent.h>
 # include <sys/types.h>
@@ -21,20 +21,20 @@
 
 typedef struct		s_data
 {
-	long long		total;
-}					t_data;
+	long long	total;
+}			t_data;
 
 void			*error(char *str);
 void			check_errno(char *path);
 void			inspect_file(int flags, char *av);
 void			block_bytes(int flags, t_list *file);
-int				isdot(char *dot);
+int			isdot(char *dot);
 void			stock_data(char *path, t_list *av);
 void			stock_params(int j, int flags, char **path, t_list *dir, t_list *files);
 char			*get_name(char *av);
-int				isdir(char *path);
+int			isdir(char *path);
 void			print_list(int flags, t_list *files);
-int				check_dash(int *i, char **av);
+int			check_dash(int *i, char **av);
 void			walking_files(int flags, t_list *files);
 void			sort(t_list *files, int flags);
 void			time_sort(int flags, t_list *files);
