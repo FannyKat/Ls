@@ -51,7 +51,6 @@ void			check_subdir(t_list *curr, t_list *subdir, int flags)
 
 void			stock_data(char *path, t_list *files)
 {
-	printf("%s\n", path);
 	files->data = ft_strdup(path);
 	files->content = ft_strdup(path);
 	files->size = 8;

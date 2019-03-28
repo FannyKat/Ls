@@ -1,26 +1,32 @@
 NAME	=	ft_ls
 
-SRC		=	init.c display.c flags.c sort.c stock.c utils.c\
+SRC	=	init.c display.c flags.c sort.c stock.c utils.c\
+
+INC	= 	my_ls.h
 
 OBJ 	=	$(SRC:.c=.o)
 
-CC		=	gcc
+CC	=	gcc
 
 CFLAGS	+=	-Wall -Wextra -I .
 
 PURPLE	=	\033[38;5;105m
 BLUE	=	\033[38;5;141m
-IDK		=	\033[38;5;177m
-END		=	\033[1;34m
+IDK	=	\033[38;5;177m
+END	=	\033[0m
 
 
-$(NAME):	$(OBJ)
-	@make -C ./lib
-	@echo "${BLUE}LIBRARY COMPILED${END}"
+$(NAME):	lib $(OBJ)
 	@$(CC) $(CFLAGS) ${SRC} ./lib/libft.a -o $(NAME)
 	@echo "${PURPLE}LS COMPILED${END}"
 
 all:		$(NAME)
+
+lib:	
+	@$(MAKE) -C ./lib
+	@echo "${BLUE}LIBRARY COMPILED${END}"
+
+$(OBJ):		$(INC)
 
 clean:
 	@/bin/rm -rf $(OBJ)
@@ -32,6 +38,6 @@ fclean:		clean
 	@make -C ./lib/ fclean
 	@echo "${BLUE}clean $(NAME)${END}"
 
-re:			fclean all
+re:		fclean all
 
 .PHONY: all clean fclean re

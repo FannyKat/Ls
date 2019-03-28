@@ -62,7 +62,6 @@ void			put_colors(struct stat fd, char *path, int flags)
 void			walking_files(int flags, t_list *files)
 {
 	t_list		*head;
-	struct stat	fd;
 
 	head = files;
 	sort(files, flags);

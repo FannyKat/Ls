@@ -2,6 +2,8 @@ NAME	=		libft.a
 
 FLAGS	=		-Wall -Werror -Wextra -I. -c
 
+INC	=		libft.h
+
 SRCS	=		ft_memset.c ft_bzero.c ft_memcpy.c ft_xlstadd.c ft_putnbr.c\
 			ft_strlen.c ft_strdup.c ft_strcpy.c ft_strcat.c ft_strchr.c\
 			ft_strcmp.c ft_atoi.c ft_memalloc.c ft_memdel.c ft_strnew.c\
@@ -19,6 +21,8 @@ all: 		$(NAME)
 
 $(OBJ): 	$(SRCS)
 			@gcc $(FLAGS) $(SRCS)
+
+$(OBJ):		$(INC)
 
 clean:
 			@rm -rf $(OBJ)

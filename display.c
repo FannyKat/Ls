@@ -20,7 +20,7 @@ void			block_bytes(int flags, t_list *file)
 		file = file->next;
 	}
 	file = begin;
-	printf("total %llu\n", bytes.total);
+	my_printf("total %d\n", bytes.total);
 }
 
 char			*get_name(char *av)
@@ -81,10 +81,10 @@ void 			inspect_file(int flags, char *path)
 	S_ISLNK (fd.st_mode) ? write(1, "l", 1) : 0;
 	S_ISSOCK (fd.st_mode) ? write(1, "s", 1) : 0;
 	get_mode(fd.st_mode);
-	printf("%u ", fd.st_nlink);
-	printf("%s ", getuid->pw_name);
-	printf("%s ", getgid->gr_name);
-	printf("%lld ", fd.st_size);
-	printf("%s ", get_date(ctime(&fd.st_mtime)));
+	my_printf("%d ", fd.st_nlink);
+	my_printf("%s ", getuid->pw_name);
+	my_printf("%s ", getgid->gr_name);
+	my_printf("%d ", fd.st_size);
+	my_printf("%s ", get_date(ctime(&fd.st_mtime)));
 	put_colors(fd, path, flags);
 }
