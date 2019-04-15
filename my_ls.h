@@ -2,7 +2,7 @@
 # define LS_H
 
 # include <fcntl.h>
-# include "lib/libft.h"
+# include "./libft/libft.h"
 #include <unistd.h>
 # include <dirent.h>
 # include <sys/types.h>

@@ -16,26 +16,26 @@ IDK	=	\033[38;5;177m
 END	=	\033[0m
 
 
-$(NAME):	lib $(OBJ)
-	@$(CC) $(CFLAGS) ${SRC} ./lib/libft.a -o $(NAME)
-	@echo "${PURPLE}LS COMPILED${END}"
-
-all:		$(NAME)
+all:	 $(NAME)
 
 lib:	
-	@$(MAKE) -C ./lib
+	make -C ./libft/
 	@echo "${BLUE}LIBRARY COMPILED${END}"
+
+$(NAME):	lib $(OBJ)
+	@$(CC) $(CFLAGS) $(SRC) ./libft/libft.a -o $(NAME)
+	@echo "${PURPLE}LS COMPILED${END}"
 
 $(OBJ):		$(INC)
 
 clean:
 	@/bin/rm -rf $(OBJ)
-	@make -C ./lib/ clean
+	@make -C ./libft/ clean
 	@echo "${BLUE}clean obj${END}"
 
 fclean:		clean
 	@/bin/rm -rf $(NAME)
-	@make -C ./lib/ fclean
+	@make -C ./libft/ fclean
 	@echo "${BLUE}clean $(NAME)${END}"
 
 re:		fclean all
